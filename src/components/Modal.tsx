@@ -38,16 +38,19 @@ const FormModal: ForwardRefRenderFunction<FormDialogHandles,FormDialogProps> = (
       defaultValues: initialData
     });
 
-    const [open, setOpen] = useState(false);
-
+    const [open, setOpen] = useState<boolean>(false);
+    
     const handleOpen = () => {
       setOpen(true);
-      if (initialData) {
-        reset(initialData);  
-      }
+      // if (initialData) {
+      //   reset(initialData);  
+      // }
     };
 
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+      setOpen(false);
+      reset({name: '', email:''});  
+    };
 
     useImperativeHandle(ref, () => ({
       openDialog: handleOpen,
@@ -74,9 +77,9 @@ const FormModal: ForwardRefRenderFunction<FormDialogHandles,FormDialogProps> = (
           <DialogContent>
             <TextField
               label="Nome"
-              {...register('nome')}
-              error={!!errors.nome}
-              helperText={errors.nome ? errors.nome.message : ''}
+              {...register('name')}
+              error={!!errors.name}
+              helperText={errors.name ? errors.name.message : ''}
               fullWidth
               margin="normal"
             />

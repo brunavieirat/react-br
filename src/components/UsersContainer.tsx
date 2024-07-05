@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react';
 import useUsers from '../hooks/useUsers';
 import Users from './Users';
 import FormModal, { FormDialogHandles } from './Modal';
+import { boolean } from 'zod';
 
 export interface User {
   id: number | string;
@@ -13,20 +14,20 @@ export interface User {
 const UsersContainer: React.FC = () => {
   const formDialogRef = useRef<FormDialogHandles>(null);
   const [user, setUser] = useState<User>();
+  
 
   const openFormDialog = () => {
     formDialogRef.current?.openDialog();
   };
 
-  const initialData: User = {
-    name: 'John Doe',
-    email: 'johndoe@example.com'
-  };
 
   const { data, refetch, isLoading, error } = useUsers();
 
-  const updateUsers = async (id: number|string) => { 
-    console.log(id, 'id')
+  const updateUsers = async (user: User) => {
+    const { id } = user; 
+    console.log(id, 'id');
+    setUser(user)
+    openFormDialog();
 
     await fetch(`/users/${id}`,  {
       method: "PATCH",
@@ -38,8 +39,8 @@ const UsersContainer: React.FC = () => {
          return response.json(); 
         }})
       .then(() => {
-        refetch()
-      
+        refetch();
+            
    })      
   }
 
@@ -85,9 +86,8 @@ const inserUser = async () => {
 }
 
 const createEditButton = (user: User) => {
-  const { id } = user;
-  // setUser(user);
-  return <button onClick={ () => updateUsers(id)}>Edit</button>
+  
+  return <button onClick={ () => updateUsers(user)}>Edit</button>
 }
 
 const createDeleteButton = (id: number) => {
@@ -100,7 +100,7 @@ const createDeleteButton = (id: number) => {
         <span>Loading...</span>
       ) : data ? (
         <>
-        <FormModal ref={formDialogRef} initialData={initialData}/>
+        <FormModal ref={formDialogRef} initialData={user} />
         <button  onClick={openFormDialog}>Inserir polar</button>
 
         <Users data={data} edit={createEditButton} remove={createDeleteButton}/>
