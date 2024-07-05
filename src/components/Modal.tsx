@@ -148,7 +148,7 @@ const FormModal: ForwardRefRenderFunction<FormDialogHandles,FormDialogProps> = (
               Cancelar
             </Button>
             <Button type="submit" variant="contained" color="primary">
-              Enviar
+              {initialData ? 'Atualizar' : 'Cadastrar'}
             </Button>
           </DialogActions>
         </Box>
