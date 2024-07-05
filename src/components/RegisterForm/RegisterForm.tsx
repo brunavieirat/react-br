@@ -1,7 +1,7 @@
 import { Box, Button, DialogActions, DialogContent, TextField } from "@mui/material";
 import { BaseSyntheticEvent } from "react";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
-import { FormData } from "./types";
+import { FormData } from "../types";
 
 interface FormContentProps {
     register: UseFormRegister<FormData>;

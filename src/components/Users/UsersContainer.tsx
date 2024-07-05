@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
-import useUsers from '../hooks/useUsers';
+import useUsers from '../../hooks/useUsers';
 import Users from './Users';
-import RegisterFormModal from './RegisterFormModal';
-import { FormData, FormDialogHandles } from './types';
+import RegisterFormModal from '../RegisterFormModal/RegisterFormModal';
+import { FormData, FormDialogHandles } from '../types';
 
 export interface User {
   id?: number | string;

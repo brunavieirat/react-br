@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useQuery } from 'react-query';
-import { User } from "../components/UsersContainer";
+import { User } from "../components/Users/UsersContainer";
 
 
 export default function useUsers() {

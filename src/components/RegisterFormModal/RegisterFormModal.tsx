@@ -3,9 +3,9 @@ import { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useEffect, u
 import { Dialog, DialogTitle, DialogContent } from '@mui/material';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import RegisterForm from './RegisterForm';
-import { FormData, schema, FormDialogHandles, FormDialogProps } from './types';
-import useUsers from '../hooks/useUsers';
+import RegisterForm from '../RegisterForm/RegisterForm';
+import { FormData, schema, FormDialogHandles, FormDialogProps } from '../types';
+import useUsers from '../../hooks/useUsers';
 
 
 const RegisterFormContainer: ForwardRefRenderFunction<FormDialogHandles, FormDialogProps>  = ({ initialData }, ref) => {
