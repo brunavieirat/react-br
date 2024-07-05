@@ -3,54 +3,78 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { Box } from '@mui/material';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const schema = z.object({
+  nome: z.string().min(1, 'Nome é obrigatório'),
+  email: z.string().email('Email inválido'),
+  // idade: z.number().int().positive('Idade deve ser um número positivo')
+});
+
+type FormData = z.infer<typeof schema>;
 
 
 const FormModal: React.FC<{open: boolean, handleClose: () => void}> = ({open, handleClose}: {open: boolean, handleClose: () => void}) =>{
-  
+     const {
+      register,
+      handleSubmit,
+      formState: { errors }
+    } = useForm<FormData>({
+      resolver: zodResolver(schema)
+    });
+
+    const onSubmit: SubmitHandler<FormData> = (data) => {
+      console.log(data);
+      handleClose();
+    };
 
     return (
         <>
     
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          PaperProps={{
-            component: 'form',
-            onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-              event.preventDefault();
-              const formData = new FormData(event.currentTarget);
-              const formJson = Object.fromEntries((formData as any).entries());
-              const email = formJson.email;
-              console.log(email);
-              handleClose();
-            },
-          }}
-        >
-          <DialogTitle>Subscribe</DialogTitle>
+    <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Formulário de Exemplo</DialogTitle>
+        <Box component="form" onSubmit={handleSubmit(onSubmit)}>
           <DialogContent>
-            <DialogContentText>
-              To subscribe to this website, please enter your email address here. We
-              will send updates occasionally.
-            </DialogContentText>
             <TextField
-              autoFocus
-              required
-              margin="dense"
-              id="name"
-              name="email"
-              label="Email Address"
-              type="email"
+              label="Nome"
+              {...register('nome')}
+              error={!!errors.nome}
+              helperText={errors.nome ? errors.nome.message : ''}
               fullWidth
-              variant="standard"
+              margin="normal"
+            />
+            <TextField
+              label="Email"
+              {...register('email')}
+              error={!!errors.email}
+              helperText={errors.email ? errors.email.message : ''}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="Idade"
+              type="number"
+              {...register('idade', { valueAsNumber: true })}
+              error={!!errors.idade}
+              helperText={errors.idade ? errors.idade.message : ''}
+              fullWidth
+              margin="normal"
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit">Subscribe</Button>
+            <Button onClick={handleClose} color="primary">
+              Cancelar
+            </Button>
+            <Button type="submit" variant="contained" color="primary">
+              Enviar
+            </Button>
           </DialogActions>
-        </Dialog>
+        </Box>
+      </Dialog>
       </>
 
     )
