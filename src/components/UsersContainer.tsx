@@ -3,10 +3,8 @@ import React, { useRef, useState } from 'react';
 import useUsers from '../hooks/useUsers';
 import Users from './Users';
 import FormModal, { FormDialogHandles } from './Modal';
-import { boolean } from 'zod';
-
 export interface User {
-  id: number | string;
+  id?: number | string;
   name: string;
   email: string;
 }
@@ -24,24 +22,9 @@ const UsersContainer: React.FC = () => {
   const { data, refetch, isLoading, error } = useUsers();
 
   const updateUsers = async (user: User) => {
-    const { id } = user; 
-    console.log(id, 'id');
     setUser(user)
     openFormDialog();
-
-    await fetch(`/users/${id}`,  {
-      method: "PATCH",
-      body: JSON.stringify({name:'Lince'}),
-    })
-      .then(response => {
-
-        if(response.ok){
-         return response.json(); 
-        }})
-      .then(() => {
-        refetch();
-            
-   })      
+    formDialogRef.current?.submitDialog();
   }
 
   const deleteUser = async (id: number|undefined) => { 
@@ -62,28 +45,7 @@ const UsersContainer: React.FC = () => {
   }
 
 
-const inserUser = async () => { 
-  const teste: User = {
-    id: Math.random().toFixed(4),
-    name: 'Polar',
-    email: 'polar@hotmail.com'
-  }
 
-  await fetch('/users', {
-    method: "POST",
-    body: JSON.stringify(teste),
-  })
-    .then(response => {
-
-      if(response.ok){
-       return response.json();
-      }})
-    .then((res) => {
-      console.log(res, 'res')
-      refetch();
- })
-    
-}
 
 const createEditButton = (user: User) => {
   
