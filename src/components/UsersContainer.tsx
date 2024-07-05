@@ -1,28 +1,32 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 
 import useUsers from '../hooks/useUsers';
 import Users from './Users';
-import FormModal from './Modal';
+import FormModal, { FormDialogHandles } from './Modal';
 
 export interface User {
-  id: number;
-  name: string ;
+  id: number | string;
+  name: string;
+  email: string;
 }
 
 const UsersContainer: React.FC = () => {
-  const [open, setOpen] = React.useState(false);
+  const formDialogRef = useRef<FormDialogHandles>(null);
+  const [user, setUser] = useState<User>();
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const openFormDialog = () => {
+    formDialogRef.current?.openDialog();
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const initialData: User = {
+    name: 'John Doe',
+    email: 'johndoe@example.com'
   };
+
   const { data, refetch, isLoading, error } = useUsers();
 
-  const updateUsers = async (id: number|undefined) => { 
-    console.log(id,   'id')
+  const updateUsers = async (id: number|string) => { 
+    console.log(id, 'id')
 
     await fetch(`/users/${id}`,  {
       method: "PATCH",
@@ -59,8 +63,9 @@ const UsersContainer: React.FC = () => {
 
 const inserUser = async () => { 
   const teste: User = {
-    id: Math.random(),
-    name: 'Polar'
+    id: Math.random().toFixed(4),
+    name: 'Polar',
+    email: 'polar@hotmail.com'
   }
 
   await fetch('/users', {
@@ -79,7 +84,9 @@ const inserUser = async () => {
     
 }
 
-const createEditButton = (id: number) => {
+const createEditButton = (user: User) => {
+  const { id } = user;
+  // setUser(user);
   return <button onClick={ () => updateUsers(id)}>Edit</button>
 }
 
@@ -93,8 +100,8 @@ const createDeleteButton = (id: number) => {
         <span>Loading...</span>
       ) : data ? (
         <>
-        <FormModal open={open} handleClose={handleClose}/>
-        <button  onClick={handleClickOpen}>Inserir polar</button>
+        <FormModal ref={formDialogRef} initialData={initialData}/>
+        <button  onClick={openFormDialog}>Inserir polar</button>
 
         <Users data={data} edit={createEditButton} remove={createDeleteButton}/>
         </>

@@ -4,7 +4,7 @@ import { User } from './UsersContainer';
 
 export type DataProps = {
   data: User[],
-  edit: (id:  number) => React.JSX.Element,
+  edit: (user: User) => React.JSX.Element,
   remove: (id: number) => React.JSX.Element;
 }
 

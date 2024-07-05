@@ -8,29 +8,62 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Box } from '@mui/material';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { forwardRef, ForwardRefRenderFunction, useEffect, useImperativeHandle, useState } from 'react';
 
 const schema = z.object({
-  nome: z.string().min(1, 'Nome é obrigatório'),
+  name: z.string().min(1, 'Nome é obrigatório'),
   email: z.string().email('Email inválido'),
-  // idade: z.number().int().positive('Idade deve ser um número positivo')
 });
 
 type FormData = z.infer<typeof schema>;
 
+interface FormDialogProps {
+  initialData?: FormData;
+}
 
-const FormModal: React.FC<{open: boolean, handleClose: () => void}> = ({open, handleClose}: {open: boolean, handleClose: () => void}) =>{
+export interface FormDialogHandles {
+  openDialog: () => void;
+  closeDialog: () => void;
+}
+
+
+const FormModal: ForwardRefRenderFunction<FormDialogHandles,FormDialogProps> = ({ initialData }, ref) =>{
      const {
       register,
       handleSubmit,
-      formState: { errors }
+      formState: { errors },
+      reset
     } = useForm<FormData>({
-      resolver: zodResolver(schema)
+      resolver: zodResolver(schema),
+      defaultValues: initialData
     });
+
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => {
+      setOpen(true);
+      if (initialData) {
+        reset(initialData);  
+      }
+    };
+
+    const handleClose = () => setOpen(false);
+
+    useImperativeHandle(ref, () => ({
+      openDialog: handleOpen,
+      closeDialog: handleClose
+    }));
 
     const onSubmit: SubmitHandler<FormData> = (data) => {
       console.log(data);
       handleClose();
     };
+
+    useEffect(()=>{
+      if (initialData) {
+        reset(initialData);  
+      }
+    }, [reset, initialData])
 
     return (
         <>
@@ -55,15 +88,7 @@ const FormModal: React.FC<{open: boolean, handleClose: () => void}> = ({open, ha
               fullWidth
               margin="normal"
             />
-            <TextField
-              label="Idade"
-              type="number"
-              {...register('idade', { valueAsNumber: true })}
-              error={!!errors.idade}
-              helperText={errors.idade ? errors.idade.message : ''}
-              fullWidth
-              margin="normal"
-            />
+
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
@@ -80,5 +105,8 @@ const FormModal: React.FC<{open: boolean, handleClose: () => void}> = ({open, ha
     )
 }
 
-export default FormModal
+const FormDialog = forwardRef(FormModal);
+
+export default FormDialog;
+
 

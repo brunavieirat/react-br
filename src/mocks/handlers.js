@@ -4,15 +4,18 @@ import { http, HttpResponse } from "msw";
 let allUsers = [
   {
     id:'12132',
-    name: 'Charlotte'
+    name: 'Charlotte',
+    email: 'charlotte@hotmail.com'
   },
   {
     id: 2323,
-    name: 'Marley'
+    name: 'Marley',
+    email: 'marley@hotmail.com'
   },
   {
     id: 323,
-    name: 'coruja'
+    name: 'coruja',
+    email: 'coruja@hotmail.com'
   }
 ];
 
