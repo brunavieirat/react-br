@@ -1,14 +1,24 @@
 import React from 'react';
 
-import useUsers from '../../hooks/useUsers';
+import useUsers from '../hooks/useUsers';
 import Users from './Users';
+import FormModal from './Modal';
 
 export interface User {
-  id?: string |number;
-  name?: string;
+  id: number;
+  name: string ;
 }
 
 const UsersContainer: React.FC = () => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   const { data, refetch, isLoading, error } = useUsers();
 
   const updateUsers = async (id: number|undefined) => { 
@@ -83,7 +93,8 @@ const createDeleteButton = (id: number) => {
         <span>Loading...</span>
       ) : data ? (
         <>
-        <button onClick={() => inserUser()}>Inserir polar</button>
+        <FormModal open={open} handleClose={handleClose}/>
+        <button  onClick={handleClickOpen}>Inserir polar</button>
 
         <Users data={data} edit={createEditButton} remove={createDeleteButton}/>
         </>
