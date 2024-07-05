@@ -1,6 +1,7 @@
-import { http, HttpResponse } from 'msw'
+import { http, HttpResponse } from "msw";
+
  
-let allPosts = [
+let allUsers = [
   {
     id:'12132',
     name: 'Charlotte'
@@ -8,41 +9,44 @@ let allPosts = [
   {
     id: 2323,
     name: 'Marley'
+  },
+  {
+    id: 323,
+    name: 'coruja'
   }
 ];
 
 
-console.log(allPosts)
 export const handlers = [
-    http.get('/posts', () => {
-        return HttpResponse.json(allPosts)
+    http.get('/users', () => {
+        return HttpResponse.json(allUsers)
         
       }),
  
-      http.post('/posts', async ({ request }) => {
-        const newPost = await request.json()
+      http.post('/users', async ({ request }) => {
+        const newUser = await request.json()
      
-        allPosts.push(newPost)
+        allUsers.push(newUser)
      
-        return HttpResponse.json(newPost, { status: 201 })
+        return HttpResponse.json(newUser, { status: 201 })
       }),
-      http.delete('/posts/:id', async({ params }) => {
+      http.delete('/users/:id', async({ params }) => {
         const { id } = params;
-        const deletedPost = allPosts.filter((item) => item.id != id );
+        const deletedUser = allUsers.filter((item) => item.id != id );
 
-        allPosts = deletedPost;
+        allUsers = deletedUser;
      
          return new HttpResponse(id, { status: 200 })
         }
      
       
       ),
-      http.patch('/posts/:id', async ({ request, params, }) => {
+      http.patch('/users/:id', async ({ request, params, }) => {
         const { name } = await request.json();
-        const {id} = params;
+        const { id } = params;
 
 
-        const newPosts = allPosts.map((item) => {
+        const newUsers = allUsers.map((item) => {
           if(item.id == id){
             console.log('igual')
             return {...item,
@@ -52,9 +56,8 @@ export const handlers = [
             return item
           }
         });
-        console.log(newPosts, 'teste')
 
-        allPosts = newPosts
+        allUsers = newUsers
 
         return HttpResponse.json({id: id, name: name}, { status: 201 })
       }),

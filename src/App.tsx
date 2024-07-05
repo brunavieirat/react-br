@@ -2,10 +2,8 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import './App.css'
-import DataTable from './components/Table/Table'
 
-// import  { worker } from './mocks/browser'
-import Users  from './components/Table/Users';
+import UsersContainer from './components/Table/UsersContainer';
 
   
   const queryClient = new QueryClient();
@@ -16,8 +14,7 @@ function App() {
     <>
      <QueryClientProvider client={queryClient}>
       <div>
-        <DataTable/>
-        <Users/>
+        <UsersContainer/>
        </div>
        </QueryClientProvider>
     </>
