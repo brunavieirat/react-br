@@ -41,19 +41,17 @@ export const handlers = [
      
          return new HttpResponse(id, { status: 200 })
         }
-     
-      
       ),
       http.patch('/users/:id', async ({ request, params, }) => {
-        const { name } = await request.json();
+        const { name, email } = await request.json();
         const { id } = params;
 
 
         const newUsers = allUsers.map((item) => {
           if(item.id == id){
-            console.log('igual')
             return {...item,
-              name: name
+              name: name,
+              email: email
             }
           }else{
             return item
