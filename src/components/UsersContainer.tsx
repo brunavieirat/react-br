@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
 import useUsers from '../hooks/useUsers';
 import Users from './Users';
-import FormDialog, { FormData, FormDialogHandles } from './Modal';
+import RegisterFormModal from './RegisterFormModal';
+import { FormData, FormDialogHandles } from './types';
 
 export interface User {
   id?: number | string;
@@ -11,16 +12,13 @@ export interface User {
 
 const UsersContainer: React.FC = () => {
   const formDialogRef = useRef<FormDialogHandles>(null);
-  const [selectedUser, setSelectedUser] = useState<FormData | undefined>(undefined); // Estado para controlar o usuário selecionado para edição
+  const [selectedUser, setSelectedUser] = useState<FormData>(); 
 
   const { data, refetch, isLoading, error } = useUsers();
 
-  const openFormDialog = (user?: User) => {
-    setSelectedUser(user ? { id: user.id, name: user.name, email: user.email } : undefined); // Define o usuário selecionado para edição se existir
-    formDialogRef.current?.openDialog();
-  };
+ 
 
-  const deleteUser = async (id: number | undefined) => {
+  const deleteUser = async (id: number | string) => {
     await fetch(`/users/${id}`, {
       method: 'DELETE',
     }).then(() => {
@@ -28,11 +26,20 @@ const UsersContainer: React.FC = () => {
     });
   };
 
-  const createEditButton = (user: User) => {
-    return <button onClick={() => openFormDialog(user)}>Editar</button>;
+  const openFormDialog = () => {
+    formDialogRef.current?.openDialog();
   };
 
-  const createDeleteButton = (id: number | undefined) => {
+  const updateUser = (user: User) => {
+    setSelectedUser(user);
+    openFormDialog();
+  };
+
+  const createEditButton = (user: User) => {
+    return <button onClick={() => updateUser(user)}>Editar</button>;
+  };
+
+  const createDeleteButton = (id: number | string) => {
     return <button onClick={() => deleteUser(id)}>Excluir</button>;
   };
 
@@ -42,7 +49,7 @@ const UsersContainer: React.FC = () => {
         <span>Loading...</span>
       ) : data ? (
         <>
-          <FormDialog ref={formDialogRef} initialData={selectedUser} />
+          <RegisterFormModal ref={formDialogRef} initialData={selectedUser} />
           <button onClick={() => openFormDialog()}>Inserir Usuário</button>
           <Users data={data} edit={createEditButton} remove={createDeleteButton} />
         </>

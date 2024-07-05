@@ -11,7 +11,7 @@ import { User } from './UsersContainer';
 interface DataProps {
   data: User[];
   edit: (user: User) => React.ReactNode;
-  remove: (id: number) => React.ReactNode;
+  remove: (id: number | string) => React.ReactNode;
 }
 
 function TableList({ data, edit, remove }: DataProps) {
