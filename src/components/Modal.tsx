@@ -1,4 +1,4 @@
-import React, { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useState } from 'react';
+import { forwardRef, ForwardRefRenderFunction, useEffect, useImperativeHandle, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Box } from '@mui/material';
 import TextField from '@mui/material/TextField';
@@ -51,13 +51,13 @@ const FormModal: ForwardRefRenderFunction<FormDialogHandles, FormDialogProps> = 
 
   const handleClose = () => {
     setOpen(false);
-    reset(); // Limpa os valores do formulário
+    reset(); 
   };
 
   useImperativeHandle(ref, () => ({
     openDialog: handleOpen,
     closeDialog: handleClose,
-    submitDialog: handleSubmit
+    submitDialog: handleSubmit(onSubmit)
   }));
 
   const insertOrUpdateUser = async (data: FormData) => {
@@ -77,19 +77,16 @@ const FormModal: ForwardRefRenderFunction<FormDialogHandles, FormDialogProps> = 
     });
 
     if (response.ok) {
-      const res = await response.json();
-      console.log(res);
       refetch();
     }
   };
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
     insertOrUpdateUser(data);
     handleClose();
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (initialData) {
       setValue('name', initialData.name);
       setValue('email', initialData.email);
