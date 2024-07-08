@@ -1,9 +1,30 @@
  {
-  "rootDir": "./src",
   "testEnvironment": "jsdom",
   "roots": ["<rootDir>"],
   "transform": {
-    "^.+\\.tsx?$": "ts-jest"
+    "^.+\\.(t|j)sx?$": [
+      "@swc/jest",
+      {
+        "jsc": {
+          "parser": {
+            "syntax": "typescript",
+            "tsx": true
+          },
+          "keepClassNames": true,
+          "transform": {
+            "legacyDecorator": true,
+            "decoratorMetadata": true,
+            "react": {
+              "runtime": "automatic"
+            }
+          }
+        },
+        "module": {
+          "type": "es6",
+          "noInterop": false
+        }
+      }
+    ]
   },
   "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
   "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
@@ -12,5 +33,5 @@
   "setupFilesAfterEnv": [
     "<rootDir>/src/setupTests.js"
   ]
-}
+}  
 }

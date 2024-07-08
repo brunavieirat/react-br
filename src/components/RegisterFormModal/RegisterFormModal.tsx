@@ -15,12 +15,14 @@ const RegisterFormContainer: ForwardRefRenderFunction<FormDialogHandles, FormDia
   });
 
   const [open, setOpen] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null); 
   const { refetch } = useUsers();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     reset();
+    setError(null);
   };
 
   useImperativeHandle(ref, () => ({
@@ -30,6 +32,7 @@ const RegisterFormContainer: ForwardRefRenderFunction<FormDialogHandles, FormDia
   }));
 
   const insertOrUpdateUser = async (data: FormData) => {
+    try {
     const id = initialData?.id || Math.floor(Math.random() * 4000);
     const user = { id, name: data.name, email: data.email };
     const route = '/users';
@@ -40,9 +43,17 @@ const RegisterFormContainer: ForwardRefRenderFunction<FormDialogHandles, FormDia
       body: JSON.stringify(user),
     });
 
-    if (response.ok) {
-      refetch();
+    if (!response.ok) {
+      throw new Error('Failed to submit user data'); 
     }
+
+      refetch();
+      handleClose();
+  } catch (error) {
+    setError('Erro ao salvar usuário'); 
+    console.error('Erro ao salvar usuário:', error); 
+  }
+    
   };
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
