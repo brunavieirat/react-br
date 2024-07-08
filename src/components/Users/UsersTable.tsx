@@ -14,6 +14,13 @@ interface DataProps {
   remove: (id: number | string) => React.ReactNode;
 }
 
+enum COLUMNS {
+  name = 'Nome',
+  email = 'Email',
+  edit = 'Editar',
+  remove = 'Remover'
+}
+
 function TableList({ data, edit, remove }: DataProps) {
   const rows = data?.map(user => ({
     ...user,
@@ -29,7 +36,7 @@ function TableList({ data, edit, remove }: DataProps) {
         <TableHead>
           <TableRow>
             {columns?.map((columnName) => (
-              <TableCell key={columnName}> {columnName}</TableCell>
+              <TableCell key={columnName}> {COLUMNS[columnName] || columnName}</TableCell>
             ))}
            
           </TableRow>
@@ -38,7 +45,7 @@ function TableList({ data, edit, remove }: DataProps) {
           {rows?.map((row, rowIndex) => (
             <TableRow key={rowIndex}>
               {columns?.map((columnName, colIndex) => (
-                <TableCell key={colIndex}>{row[columnName]}</TableCell>
+                <TableCell key={colIndex}>{ row[columnName]}</TableCell>
               ))}
             </TableRow>
           ))}

@@ -1,14 +1,29 @@
 import React, { useRef, useState } from 'react';
+import styled from 'styled-components';
 import useUsers from '../../hooks/useUsers';
 import Users from './Users';
 import RegisterFormModal from '../RegisterFormModal/RegisterFormModal';
 import { FormData, FormDialogHandles } from '../types';
+
 
 export interface User {
   id?: number | string;
   name: string;
   email: string;
 }
+
+const ButtonStyled = styled.button`
+    padding: 10px 20px;
+    margin: 10px;  
+    margin-left: auto;  
+    background-color: #1976d2;
+    color: #ffffff;
+    // border: none;
+    // border-radius: 4px;
+    // cursor: pointer;
+    // font-size: 16px;
+    // transition: background-color 0.3s ease;
+`;
 
 const UsersContainer: React.FC = () => {
   const formDialogRef = useRef<FormDialogHandles>(null);
@@ -50,7 +65,7 @@ const UsersContainer: React.FC = () => {
       ) : data ? (
         <>
           <RegisterFormModal ref={formDialogRef} initialData={selectedUser} />
-          <button onClick={() => openFormDialog()}>Inserir Usuário</button>
+          <ButtonStyled onClick={() => openFormDialog()}>Inserir Usuário</ButtonStyled>
           <Users data={data} edit={createEditButton} remove={createDeleteButton} />
         </>
       ) : (

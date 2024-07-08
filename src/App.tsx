@@ -2,6 +2,7 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import './App.css'
+import './index.css'
 
 import UsersContainer from './components/Users/UsersContainer';
 

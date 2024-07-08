@@ -6,23 +6,33 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import RegisterForm from '../RegisterForm/RegisterForm';
 import { FormData, schema, FormDialogHandles, FormDialogProps } from '../types';
 import useUsers from '../../hooks/useUsers';
+import { User } from '../Users/UsersContainer';
 
 
 const RegisterFormContainer: ForwardRefRenderFunction<FormDialogHandles, FormDialogProps>  = ({ initialData }, ref) => {
+  const newUser: User = {
+    name: '',
+    email: ''
+  }
+  
+  const [data, setData] = useState<User>(newUser);
   const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: initialData || { name: '', email: '' },
+    defaultValues: data,
   });
 
+ 
   const [open, setOpen] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null); 
   const { refetch } = useUsers();
+
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     reset();
-    setError(null);
+    setError('Error');
+    setData(newUser)
   };
 
   useImperativeHandle(ref, () => ({
@@ -65,14 +75,15 @@ const RegisterFormContainer: ForwardRefRenderFunction<FormDialogHandles, FormDia
     if (initialData) {
       setValue('name', initialData.name);
       setValue('email', initialData.email);
-    }
-  }, [initialData, setValue]);
+      setData({ name: initialData.name, email: initialData.email })
+    } 
+  }, [setValue, initialData]);
 
 
 
     return (
       <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>{initialData ? 'Editar Usuário' : 'Adicionar Usuário'}</DialogTitle>
+      <DialogTitle>{ data.name ? 'Editar Usuário' : 'Cadastrar Usuário' }</DialogTitle>
       <DialogContent>
         <RegisterForm
           register={register}
